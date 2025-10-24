@@ -36,6 +36,7 @@ import {
   MaterialBill,
 } from "./monthly_bills_views";
 import ProjectDetailView from "./project_detail_view";
+import ExcelUploader from "./components/ExcelUploader";
 
 /**
  * ELLI V1 — Monochrome Edition (AP/AR)
@@ -203,6 +204,68 @@ const allPayments = purchaseOrders.flatMap((po) =>
     project: po.project,
   }))
 );
+
+// ==========================
+// Excel Data Mapping Functions
+// ==========================
+
+// Map a row from AR - SAMPLE PROJECT.xlsx into Receivable
+const mapReceivableRow = (row: any): Receivable | null => {
+  if (!row['Req #'] && !row['Requisition']) return null;
+  return {
+    id: String(row['Req #'] || row['Requisition'] || ''),
+    project: String(row['Project #'] || row['Project'] || ''),
+    requisition: String(row['Req #'] || row['Requisition'] || ''),
+    month: String(row['Req Month Year'] || row['Month'] || ''),
+    status: String(row['Status'] || 'submitted').toLowerCase(),
+    net: Number(row['Amount'] || row['Net Amount'] || 0),
+    submitted: String(row['Date'] || row['Submitted'] || ''),
+    approved: String(row['Approved'] || ''),
+    paid: String(row['Paid'] || ''),
+  };
+};
+
+// Map a row from Monthly Bills – Autopay into AutopayBill
+const mapAutopayRow = (row: any): AutopayBill | null => {
+  if (!row['Company'] && !row['Vendor']) return null;
+  return {
+    id: String(row['Policy #'] || row['Company'] || row['Vendor'] || ''),
+    vendor: String(row['Company'] || row['Vendor'] || ''),
+    description: String(row['Policy #'] || row['Description'] || ''),
+    monthlyAmount: Number(row['Elli Operating'] || row['Monthly Amount'] || row['Amount'] || 0),
+    nextPaymentDate: String(row['Date'] || row['Next Payment'] || ''),
+  };
+};
+
+// Map a row from Monthly Bills – Subs into SubBill
+const mapSubBillRow = (row: any): SubBill | null => {
+  if (!row['Vendor'] && !row['Company']) return null;
+  return {
+    id: String(row['PO #'] || row['PO Number'] || ''),
+    vendor: String(row['Vendor'] || row['Company'] || ''),
+    poNumber: String(row['PO #'] || row['PO Number'] || ''),
+    description: String(row['Description'] || ''),
+    totalAmount: Number(row['Total'] || row['Total Amount'] || row['Original Balance'] || 0),
+    dueDate: String(row['Due Date'] || ''),
+    percentDueThisMonth: Number(row['% Due This Month'] || 0.2),
+    paidPercent: Number(row['% Paid'] || 0),
+  };
+};
+
+// Map a row from Monthly Bills – Materials into MaterialBill
+const mapMaterialRow = (row: any): MaterialBill | null => {
+  if (!row['Vendor'] && !row['Company']) return null;
+  return {
+    id: String(row['Inv #'] || row['Invoice #'] || ''),
+    vendor: String(row['Vendor'] || row['Company'] || ''),
+    poNumber: String(row['PO #'] || row['PO Number'] || ''),
+    description: String(row['Description'] || row['Project'] || ''),
+    totalAmount: Number(row['Total'] || row['Amount'] || 0),
+    dueDate: String(row['Inv Date'] || row['Date'] || ''),
+    percentDueThisMonth: Number(row['% Due This Month'] || 0.2),
+    paidPercent: Number(row['% Paid'] || row['Check'] ? 1 : 0),
+  };
+};
 
 // Sample Receivables data (replace with Excel parse later)
 const receivables: Receivable[] = [
@@ -808,6 +871,12 @@ export default function App() {
 
   // Project Detail state
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+
+  // Uploaded data state (starts with sample data, can be replaced by Excel upload)
+  const [uploadedReceivables, setUploadedReceivables] = useState<Receivable[]>(receivables);
+  const [uploadedAutopayBills, setUploadedAutopayBills] = useState<AutopayBill[]>(autopayBills);
+  const [uploadedSubBills, setUploadedSubBills] = useState<SubBill[]>(subBills);
+  const [uploadedMaterialBills, setUploadedMaterialBills] = useState<MaterialBill[]>(materialBills);
 
   // Derived data (POs)
   const filteredPOs = useMemo(() => {
@@ -2020,15 +2089,31 @@ export default function App() {
           )}
           {active === "view-cos" && <ChangeOrdersView />}
           {active === "view-payments" && <PaymentsView />}
-          {active === "receivables-summary" && <ReceivablesSummaryView receivables={receivables} />}
+          {active === "receivables-summary" && (
+            <>
+              <ExcelUploader<Receivable>
+                onDataLoaded={setUploadedReceivables}
+                mapRow={mapReceivableRow}
+                label="Upload Receivables Excel"
+              />
+              <ReceivablesSummaryView receivables={uploadedReceivables} />
+            </>
+          )}
           {active === "receivables-log" && !selectedProjectId && (
-            <ReceivablesLogView
-              receivables={receivables}
-              onViewProject={(projectId) => {
-                setSelectedProjectId(projectId);
-                setActive("project-detail");
-              }}
-            />
+            <>
+              <ExcelUploader<Receivable>
+                onDataLoaded={setUploadedReceivables}
+                mapRow={mapReceivableRow}
+                label="Upload Receivables Excel"
+              />
+              <ReceivablesLogView
+                receivables={uploadedReceivables}
+                onViewProject={(projectId) => {
+                  setSelectedProjectId(projectId);
+                  setActive("project-detail");
+                }}
+              />
+            </>
           )}
           {active === "project-detail" && selectedProjectId && sampleProjectDetails[selectedProjectId as keyof typeof sampleProjectDetails] && (
             <ProjectDetailView
@@ -2041,9 +2126,36 @@ export default function App() {
           )}
           {active === "receivables-liens" && <LiensView liens={liens} />}
           {active === "receivables-closed" && <ClosedProjectsView projects={closedProjects} />}
-          {active === "bills-autopay" && <AutopayBillsView bills={autopayBills} />}
-          {active === "bills-sub" && <SubBillsView bills={subBills} />}
-          {active === "bills-materials" && <MaterialsBillsView bills={materialBills} />}
+          {active === "bills-autopay" && (
+            <>
+              <ExcelUploader<AutopayBill>
+                onDataLoaded={setUploadedAutopayBills}
+                mapRow={mapAutopayRow}
+                label="Upload AutoPay Excel"
+              />
+              <AutopayBillsView bills={uploadedAutopayBills} />
+            </>
+          )}
+          {active === "bills-sub" && (
+            <>
+              <ExcelUploader<SubBill>
+                onDataLoaded={setUploadedSubBills}
+                mapRow={mapSubBillRow}
+                label="Upload Subcontractor Bills Excel"
+              />
+              <SubBillsView bills={uploadedSubBills} />
+            </>
+          )}
+          {active === "bills-materials" && (
+            <>
+              <ExcelUploader<MaterialBill>
+                onDataLoaded={setUploadedMaterialBills}
+                mapRow={mapMaterialRow}
+                label="Upload Materials Excel"
+              />
+              <MaterialsBillsView bills={uploadedMaterialBills} />
+            </>
+          )}
         </main>
       </section>
 
