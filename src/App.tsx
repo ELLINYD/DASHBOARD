@@ -996,79 +996,82 @@ export default function App() {
   // View to display a list of Change Orders
   const ChangeOrdersView: React.FC = () => {
     return (
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold mb-4">Change Orders</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-fixed border-collapse">
+      <BorderCard>
+        <div className="border-b border-black/80 p-4">
+          <h4 className="text-sm font-semibold">Change Orders</h4>
+        </div>
+        <div className="overflow-auto p-4">
+          <table className="w-full table-fixed border-collapse text-sm">
             <thead>
-              <tr className="text-xs uppercase bg-black text-white">
-                <th className="p-2 w-24">CO #</th>
-                <th className="p-2 w-24">Date</th>
-                <th className="p-2">Vendor</th>
-                <th className="p-16">Project</th>
-                <th className="p-2 w-24 text-right">Amount</th>
-                <th className="p-2 w-24 text-right">Paid</th>
-                <th className="p-2 w-24 text-right">Balance</th>
-                <th className="p-2 w-16">Status</th>
-                <th className="p-2 w-16">Details</th>
+              <tr className="bg-black text-white">
+                <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">CO #</th>
+                <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">Date</th>
+                <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Vendor</th>
+                <th className="w-40 px-2 py-1 text-left text-xs uppercase tracking-widest">Project</th>
+                <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Amount</th>
+                <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Paid</th>
+                <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Balance</th>
+                <th className="w-20 px-2 py-1 text-left text-xs uppercase tracking-widest">Status</th>
+                <th className="w-20 px-2 py-1 text-left text-xs uppercase tracking-widest">Details</th>
               </tr>
             </thead>
             <tbody>
               {changeOrders.map((co) => (
-                <tr key={co.id} className="border-b border-black/20 text-sm">
-                  <td className="p-2">{co.id}</td>
-                  <td className="p-2">{co.date}</td>
-                  <td className="p-2">{co.vendor}</td>
-                  <td className="p-2">{co.project}</td>
-                  <td className="p-2 text-right">${co.amount.toLocaleString()}</td>
-                  <td className="p-2 text-right">${co.paid.toLocaleString()}</td>
-                  <td className="p-2 text-right">${co.balance.toLocaleString()}</td>
-                  <td className="p-2 text-center">{co.status || "Open"}</td>
-                  <td className="p-2 text-center">
-                    {/* Placeholder for details button; implement modal if desired */}
-                    <button className="underline">View</button>
+                <tr key={co.id} className="border-t border-black/20 hover:bg-black/5">
+                  <td className="px-2 py-2">{co.id}</td>
+                  <td className="px-2 py-2">{co.date}</td>
+                  <td className="px-2 py-2">{co.vendor}</td>
+                  <td className="px-2 py-2">{co.project}</td>
+                  <td className="px-2 py-2 text-right">${co.amount.toLocaleString()}</td>
+                  <td className="px-2 py-2 text-right">${co.paid.toLocaleString()}</td>
+                  <td className="px-2 py-2 text-right">${co.balance.toLocaleString()}</td>
+                  <td className="px-2 py-2">{co.status || "Open"}</td>
+                  <td className="px-2 py-2">
+                    <button className="text-blue-600 hover:underline cursor-pointer text-xs">View</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </BorderCard>
     );
   };
 
   // View to display all payments across purchase orders
   const PaymentsView: React.FC = () => {
     return (
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold mb-4">Payments</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-fixed border-collapse">
+      <BorderCard>
+        <div className="border-b border-black/80 p-4">
+          <h4 className="text-sm font-semibold">Payments</h4>
+        </div>
+        <div className="overflow-auto p-4">
+          <table className="w-full table-fixed border-collapse text-sm">
             <thead>
-              <tr className="text-xs uppercase bg-black text-white">
-                <th className="p-2 w-24">PO #</th>
-                <th className="p-2 w-24">Date</th>
-                <th className="p-2">Description</th>
-                <th className="p-2 w-24 text-right">Amount</th>
-                <th className="p-2">Vendor</th>
-                <th className="p-2">Project</th>
+              <tr className="bg-black text-white">
+                <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">PO #</th>
+                <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">Date</th>
+                <th className="w-40 px-2 py-1 text-left text-xs uppercase tracking-widest">Description</th>
+                <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Amount</th>
+                <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Vendor</th>
+                <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Project</th>
               </tr>
             </thead>
             <tbody>
               {allPayments.map((p, idx) => (
-                <tr key={idx} className="border-b border-black/20 text-sm">
-                  <td className="p-2">{p.poId}</td>
-                  <td className="p-2">{p.date}</td>
-                  <td className="p-2">{p.description}</td>
-                  <td className="p-2 text-right">${p.amount.toLocaleString()}</td>
-                  <td className="p-2">{p.vendor}</td>
-                  <td className="p-2">{p.project}</td>
+                <tr key={idx} className="border-t border-black/20 hover:bg-black/5">
+                  <td className="px-2 py-2">{p.poId}</td>
+                  <td className="px-2 py-2">{p.date}</td>
+                  <td className="px-2 py-2">{p.description}</td>
+                  <td className="px-2 py-2 text-right">${p.amount.toLocaleString()}</td>
+                  <td className="px-2 py-2">{p.vendor}</td>
+                  <td className="px-2 py-2">{p.project}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </BorderCard>
     );
   };
 
