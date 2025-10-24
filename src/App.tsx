@@ -17,6 +17,7 @@ import {
   BadgeDollarSign,
   X,
 } from "lucide-react";
+import { FabricatorPOCreateView, InstallerPOCreateView, ChangeOrderCreateView } from "./po_forms";
 
 /**
  * ELLI V1 — Monochrome Edition (AP/AR)
@@ -1563,6 +1564,15 @@ export default function App() {
           {active === "project-master-list" && <ProjectMasterListView />}
           {active === "view-rfqs" && <RFQListView />}
           {active === "create-rfq" && <RFQCreateView />}
+          {active === "create-fab-po" && (
+            <FabricatorPOCreateView projects={projects} vendors={vendors} />
+          )}
+          {active === "create-installer-po" && (
+            <InstallerPOCreateView projects={projects} vendors={vendors} />
+          )}
+          {active === "create-co" && (
+            <ChangeOrderCreateView projects={projects} vendors={vendors} purchaseOrders={purchaseOrders} />
+          )}
         </main>
       </section>
 
