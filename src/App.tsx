@@ -1040,50 +1040,93 @@ export default function App() {
 
   // View to display all payments across purchase orders
   const PaymentsView: React.FC = () => {
+    const [selectedPaymentPo, setSelectedPaymentPo] = useState<string | null>(null);
+
     return (
-      <BorderCard>
-        <div className="border-b border-black/80 p-4">
-          <h4 className="text-sm font-semibold">Payments</h4>
-        </div>
-        <div className="overflow-auto p-4">
-          <table className="w-full table-fixed border-collapse text-sm">
-            <thead>
-              <tr className="bg-black text-white">
-                <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">PO #</th>
-                <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">Date</th>
-                <th className="w-40 px-2 py-1 text-left text-xs uppercase tracking-widest">Description</th>
-                <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Amount</th>
-                <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Vendor</th>
-                <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Project</th>
-                <th className="w-20 px-2 py-1 text-left text-xs uppercase tracking-widest">Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allPayments.map((p, idx) => (
-                <tr key={idx} className="border-t border-black/20 hover:bg-black/5">
-                  <td className="px-2 py-2">{p.poId}</td>
-                  <td className="px-2 py-2">{p.date}</td>
-                  <td className="px-2 py-2">{p.description}</td>
-                  <td className="px-2 py-2 text-right">${p.amount.toLocaleString()}</td>
-                  <td className="px-2 py-2">{p.vendor}</td>
-                  <td className="px-2 py-2">{p.project}</td>
-                  <td className="px-2 py-2">
-                    <button
-                      className="text-blue-600 hover:underline cursor-pointer text-xs"
-                      onClick={() => {
-                        const po = purchaseOrders.find((po) => po.id === p.poId);
-                        if (po) setDetailPO(po);
-                      }}
-                    >
-                      View
-                    </button>
-                  </td>
+      <>
+        <BorderCard>
+          <div className="border-b border-black/80 p-4">
+            <h4 className="text-sm font-semibold">Payments</h4>
+          </div>
+          <div className="overflow-auto p-4">
+            <table className="w-full table-fixed border-collapse text-sm">
+              <thead>
+                <tr className="bg-black text-white">
+                  <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">PO #</th>
+                  <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">Date</th>
+                  <th className="w-40 px-2 py-1 text-left text-xs uppercase tracking-widest">Description</th>
+                  <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Amount</th>
+                  <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Vendor</th>
+                  <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Project</th>
+                  <th className="w-20 px-2 py-1 text-left text-xs uppercase tracking-widest">Details</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </BorderCard>
+              </thead>
+              <tbody>
+                {allPayments.map((p, idx) => (
+                  <tr key={idx} className="border-t border-black/20 hover:bg-black/5">
+                    <td className="px-2 py-2">{p.poId}</td>
+                    <td className="px-2 py-2">{p.date}</td>
+                    <td className="px-2 py-2">{p.description}</td>
+                    <td className="px-2 py-2 text-right">${p.amount.toLocaleString()}</td>
+                    <td className="px-2 py-2">{p.vendor}</td>
+                    <td className="px-2 py-2">{p.project}</td>
+                    <td className="px-2 py-2">
+                      <span
+                        className="text-blue-600 hover:underline cursor-pointer text-xs"
+                        onClick={() => setSelectedPaymentPo(p.poId)}
+                      >
+                        View
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </BorderCard>
+
+        {/* Payment Details Modal */}
+        {selectedPaymentPo && (
+          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl w-[32rem] shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-sm font-semibold">Payment Details – PO {selectedPaymentPo}</h4>
+                <button
+                  onClick={() => setSelectedPaymentPo(null)}
+                  className="rounded-full border border-black p-1 hover:bg-black/5"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <table className="w-full text-xs border-collapse">
+                <thead className="border-b border-black/20">
+                  <tr className="bg-black text-white">
+                    <th className="w-24 px-2 py-1 text-left">Date</th>
+                    <th className="w-40 px-2 py-1 text-left">Description</th>
+                    <th className="w-24 px-2 py-1 text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {purchaseOrders
+                    .find((po) => po.id === selectedPaymentPo)
+                    ?.payments.map((pay, idx) => (
+                      <tr key={idx} className="border-b border-black/10">
+                        <td className="px-2 py-1">{pay.date}</td>
+                        <td className="px-2 py-1">{pay.description}</td>
+                        <td className="px-2 py-1 text-right">
+                          {pay.amount.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </>
     );
   };
 

@@ -638,8 +638,11 @@ export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () =>
             </div>
           )}
           {/* Terms & Conditions */}
-          <div className="p-3 text-[10px] bg-black/5 border-t border-black whitespace-pre-wrap">
-            <pre className="whitespace-pre-wrap text-[10px]">{INSTALLER_PO_TERMS}</pre>
+          <div className="p-3 bg-black/5 border border-black/20 rounded-xl mt-4 mx-3 mb-3">
+            <h5 className="text-xs font-semibold mb-1">Terms & Conditions</h5>
+            <pre className="text-[10px] whitespace-pre-wrap">
+              {INSTALLER_PO_TERMS}
+            </pre>
           </div>
         </div>
       )}
@@ -918,8 +921,11 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
             </div>
           )}
           {/* Terms & Conditions */}
-          <div className="p-3 text-[10px] bg-black/5 border-t border-black whitespace-pre-wrap">
-            <pre className="whitespace-pre-wrap text-[10px]">{CHANGE_ORDER_TERMS}</pre>
+          <div className="p-3 bg-black/5 border border-black/20 rounded-xl mt-4 mx-3 mb-3">
+            <h5 className="text-xs font-semibold mb-1">Terms & Conditions</h5>
+            <pre className="text-[10px] whitespace-pre-wrap">
+              {CHANGE_ORDER_TERMS}
+            </pre>
           </div>
         </div>
       )}
