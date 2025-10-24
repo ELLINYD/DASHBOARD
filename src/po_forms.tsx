@@ -327,7 +327,7 @@ export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = () 
       )}
       {/* Preview */}
       {previewMode && (
-        <div ref={printRef} className="border border-black rounded-xl overflow-hidden">
+        <div ref={printRef} className="rounded-2xl border-[1.5px] border-black bg-white overflow-hidden">
           <div className="border-b border-black p-4 flex justify-between">
             <div>
               <h3 className="text-lg font-bold">PURCHASE ORDER</h3>
@@ -562,7 +562,7 @@ export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () =>
         </div>
       )}
       {previewMode && (
-        <div ref={printRef} className="border border-black rounded-xl overflow-hidden">
+        <div ref={printRef} className="rounded-2xl border-[1.5px] border-black bg-white overflow-hidden">
           <div className="border-b border-black p-4 flex justify-between">
             <div>
               <h3 className="text-lg font-bold">INSTALLER PURCHASE ORDER</h3>
@@ -840,7 +840,7 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
         </div>
       )}
       {previewMode && (
-        <div ref={printRef} className="border border-black rounded-xl overflow-hidden">
+        <div ref={printRef} className="rounded-2xl border-[1.5px] border-black bg-white overflow-hidden">
           <div className="border-b border-black p-4 flex justify-between">
             <div>
               <h3 className="text-lg font-bold">CHANGE ORDER</h3>

@@ -1054,23 +1054,23 @@ export default function App() {
                 <tr className="bg-black text-white">
                   <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">PO #</th>
                   <th className="w-24 px-2 py-1 text-left text-xs uppercase tracking-widest">Date</th>
-                  <th className="w-40 px-2 py-1 text-left text-xs uppercase tracking-widest">Description</th>
+                  <th className="w-48 px-2 py-1 text-left text-xs uppercase tracking-widest">Description</th>
                   <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Amount</th>
                   <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Vendor</th>
-                  <th className="w-32 px-2 py-1 text-left text-xs uppercase tracking-widest">Project</th>
+                  <th className="w-36 px-2 py-1 text-left text-xs uppercase tracking-widest">Project</th>
                   <th className="w-20 px-2 py-1 text-left text-xs uppercase tracking-widest">Details</th>
                 </tr>
               </thead>
               <tbody>
                 {allPayments.map((p, idx) => (
                   <tr key={idx} className="border-t border-black/20 hover:bg-black/5">
-                    <td className="px-2 py-2">{p.poId}</td>
-                    <td className="px-2 py-2">{p.date}</td>
-                    <td className="px-2 py-2">{p.description}</td>
-                    <td className="px-2 py-2 text-right">${p.amount.toLocaleString()}</td>
-                    <td className="px-2 py-2">{p.vendor}</td>
-                    <td className="px-2 py-2">{p.project}</td>
-                    <td className="px-2 py-2">
+                    <td className="w-24 px-2 py-2">{p.poId}</td>
+                    <td className="w-24 px-2 py-2">{p.date}</td>
+                    <td className="w-48 px-2 py-2">{p.description}</td>
+                    <td className="w-24 px-2 py-2 text-right">${p.amount.toLocaleString()}</td>
+                    <td className="w-32 px-2 py-2">{p.vendor}</td>
+                    <td className="w-36 px-2 py-2">{p.project}</td>
+                    <td className="w-20 px-2 py-2">
                       <span
                         className="text-blue-600 hover:underline cursor-pointer text-xs"
                         onClick={() => setSelectedPaymentPo(p.poId)}
