@@ -18,6 +18,15 @@ import {
   X,
 } from "lucide-react";
 import { FabricatorPOCreateView, InstallerPOCreateView, ChangeOrderCreateView } from "./po_forms";
+import {
+  ReceivablesSummaryView,
+  ReceivablesLogView,
+  LiensView,
+  ClosedProjectsView,
+  Receivable,
+  Lien,
+  ClosedProject,
+} from "./receivables_views";
 
 /**
  * ELLI V1 — Monochrome Edition (AP/AR)
@@ -185,6 +194,89 @@ const allPayments = purchaseOrders.flatMap((po) =>
     project: po.project,
   }))
 );
+
+// Sample Receivables data (replace with Excel parse later)
+const receivables: Receivable[] = [
+  {
+    id: "REQ-001",
+    project: "28600-24",
+    requisition: "#001",
+    month: "Oct 2025",
+    status: "submitted",
+    net: 125000,
+    submitted: "2025-10-15",
+    approved: "",
+    paid: "",
+  },
+  {
+    id: "REQ-002",
+    project: "81084",
+    requisition: "#002",
+    month: "Oct 2025",
+    status: "approved",
+    net: 89500,
+    submitted: "2025-10-10",
+    approved: "2025-10-18",
+    paid: "",
+  },
+  {
+    id: "REQ-003",
+    project: "23300",
+    requisition: "#003",
+    month: "Sep 2025",
+    status: "paid",
+    net: 54200,
+    submitted: "2025-09-20",
+    approved: "2025-09-25",
+    paid: "2025-10-02",
+  },
+];
+
+// Sample Liens data
+const liens: Lien[] = [
+  {
+    id: "LIEN-001",
+    project: "28600-24",
+    gc: "Barr & Barr",
+    base: 1420000,
+    approvedCOs: 35000,
+    paidToDate: 890000,
+    pendingCOs: 15000,
+    balance: 580000,
+    lienDate: "2025-08-15",
+    lienStatus: "Active",
+  },
+  {
+    id: "LIEN-002",
+    project: "81084",
+    gc: "STV",
+    base: 2100000,
+    approvedCOs: 50000,
+    paidToDate: 1200000,
+    pendingCOs: 25000,
+    balance: 975000,
+    lienDate: "2025-07-20",
+    lienStatus: "Pending Resolution",
+  },
+];
+
+// Sample Closed Projects data
+const closedProjects: ClosedProject[] = [
+  {
+    id: "CLOSED-001",
+    project: "26100-25",
+    gc: "Gilbane",
+    finalAmount: 1850000,
+    completionDate: "2025-09-30",
+  },
+  {
+    id: "CLOSED-002",
+    project: "22500-23",
+    gc: "Skanska",
+    finalAmount: 987500,
+    completionDate: "2025-08-15",
+  },
+];
 
 const vendors = [
   { id: "V-001", name: "NODE Architecture Engineering Consulting P.C.", category: "Professional Services", contact: "John Smith", phone: "(212) 555-0100", outstanding: 39999.9, email: "contact@nodearch.com" },
@@ -436,6 +528,17 @@ const NAV = [
     label: "Payments",
     icon: BadgeDollarSign,
   },
+  {
+    id: "receivables",
+    label: "Receivables",
+    icon: BadgeDollarSign,
+    children: [
+      { id: "receivables-summary", label: "Summary", icon: Eye },
+      { id: "receivables-log", label: "Requisitions Log", icon: FileText },
+      { id: "receivables-liens", label: "Liens & Disputes", icon: FileEdit },
+      { id: "receivables-closed", label: "Closed Projects", icon: Calendar },
+    ],
+  },
   { id: "monthly-bills", label: "Monthly Bills", icon: Calendar },
   { id: "vendors", label: "Vendors", icon: Users },
 ] as const;
@@ -550,6 +653,7 @@ export default function App() {
     rfqs: true,
     pos: true,
     cos: false,
+    receivables: false,
   });
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<keyof (typeof purchaseOrders)[number] | "">("");
@@ -1772,6 +1876,10 @@ export default function App() {
           )}
           {active === "view-cos" && <ChangeOrdersView />}
           {active === "view-payments" && <PaymentsView />}
+          {active === "receivables-summary" && <ReceivablesSummaryView receivables={receivables} />}
+          {active === "receivables-log" && <ReceivablesLogView receivables={receivables} />}
+          {active === "receivables-liens" && <LiensView liens={liens} />}
+          {active === "receivables-closed" && <ClosedProjectsView projects={closedProjects} />}
         </main>
       </section>
 
