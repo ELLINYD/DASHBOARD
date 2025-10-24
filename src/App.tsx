@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect, useRef, forwardRef } from "react";
 import {
   Home,
   Building,
-  DollarSign,
   FileText,
   ShoppingCart,
   FileEdit,
@@ -14,7 +13,6 @@ import {
   Factory,
   Wrench,
   ChevronDown,
-  BarChart3,
   Printer,
   BadgeDollarSign,
   X,
@@ -990,40 +988,11 @@ export default function App() {
           setMode('paste');
           setRaw(text);
         } else if (name.endsWith('.xlsx')) {
-          // Dynamic import to keep preview lightweight; graceful fallback if unavailable
-          let XLSX: any;
-          try {
-            XLSX = (await import(/* @vite-ignore */ 'xlsx')).default || (await import('xlsx'));
-          } catch (err) {
-            setErrors(['Native .xlsx parser not available in this preview. Use Paste or export CSV/TSV.']);
-            return;
-          }
-          const buf = await file.arrayBuffer();
-          const wb = XLSX.read(buf, { type: 'array' });
-          const sheetName = wb.SheetNames[0];
-          const ws = wb.Sheets[sheetName];
-          const table: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: '' });
-          if (!table.length) throw new Error('The Excel sheet is empty.');
-          const header = table[0].map((h: any) => String(h ?? '').trim());
-          const matches = PROJECT_LIST_SCHEMA.every((h, i) => (header[i] ?? '') === h);
-          if (!matches || header.length !== PROJECT_LIST_SCHEMA.length) {
-            throw new Error(`Header mismatch. Expected: [${PROJECT_LIST_SCHEMA.join(' | ')}]  Received: [${header.join(' | ')}]`);
-          }
-          const rowsOnly = table.slice(1);
-          const errs: string[] = [];
-          const good: any[] = [];
-          rowsOnly.forEach((cols, idx) => {
-            const arr = Array.isArray(cols) ? cols : [];
-            if (arr.length !== PROJECT_LIST_SCHEMA.length) {
-              errs.push(`Row ${idx + 1}: expected ${PROJECT_LIST_SCHEMA.length} columns, got ${arr.length}`);
-              return;
-            }
-            const obj: any = {};
-            PROJECT_LIST_SCHEMA.forEach((key, i) => { obj[key] = String(arr[i] ?? ''); });
-            good.push(obj);
-          });
-          setErrors(errs);
-          if (good.length && errs.length === 0) onImport(good);
+          // .xlsx parsing is not available in this preview
+          setErrors([
+            ".xlsx import not supported in this preview. Please convert your sheet to CSV/TSV or paste the rows directly.",
+          ]);
+          return;
         } else if (name.endsWith('.pdf') || name.endsWith('.doc') || name.endsWith('.docx')) {
           setErrors(['Attachment stored only in preview. Use CSV/TSV/Paste for table import.']);
         } else {
