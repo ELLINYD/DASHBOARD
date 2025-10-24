@@ -248,7 +248,7 @@ export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = () 
       </div>
       {!previewMode && (
         <div className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2 p-4 bg-black/5 rounded-xl">
             <div>
               <label className="text-xs uppercase tracking-widest text-black/60">PO #</label>
               <input value={form.id} onChange={(e) => updateField("id", e.target.value)} className="w-full border-b border-black bg-transparent px-1 py-1 text-sm outline-none" />
@@ -276,7 +276,7 @@ export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = () 
               <input value={form.deliverTo} onChange={(e) => updateField("deliverTo", e.target.value)} className="w-full border-b border-black bg-transparent px-1 py-1 text-sm outline-none" />
             </div>
           </div>
-          <div>
+          <div className="p-4 bg-black/5 rounded-xl">
             <table className="w-full table-fixed border-collapse">
               <thead>
                 <tr className="bg-black text-white text-xs uppercase">
@@ -319,7 +319,7 @@ export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = () 
               </tbody>
             </table>
           </div>
-          <div>
+          <div className="p-4 bg-black/5 rounded-xl">
             <label className="text-xs uppercase tracking-widest text-black/60">Notes</label>
             <textarea value={form.notes} onChange={(e) => updateField("notes", e.target.value)} rows={4} className="w-full rounded-xl border border-black/40 p-2 text-sm"></textarea>
           </div>
@@ -492,7 +492,7 @@ export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () =>
       </div>
       {!previewMode && (
         <div className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2 p-4 bg-black/5 rounded-xl">
             <div>
               <label className="text-xs uppercase tracking-widest text-black/60">PO #</label>
               <input value={form.id} onChange={(e) => updateField("id", e.target.value)} className="w-full border-b border-black bg-transparent px-1 py-1 text-sm outline-none" />
@@ -524,7 +524,7 @@ export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () =>
               <textarea value={form.scopeOfWork} onChange={(e) => updateField("scopeOfWork", e.target.value)} rows={4} className="w-full rounded-xl border border-black/40 p-2 text-sm"></textarea>
             </div>
           </div>
-          <div>
+          <div className="p-4 bg-black/5 rounded-xl">
             <table className="w-full table-fixed border-collapse">
               <thead>
                 <tr className="bg-black text-white text-xs uppercase">
@@ -555,7 +555,7 @@ export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () =>
               </tbody>
             </table>
           </div>
-          <div>
+          <div className="p-4 bg-black/5 rounded-xl">
             <label className="text-xs uppercase tracking-widest text-black/60">Notes</label>
             <textarea value={form.notes} onChange={(e) => updateField("notes", e.target.value)} rows={3} className="w-full rounded-xl border border-black/40 p-2 text-sm"></textarea>
           </div>
@@ -637,9 +637,9 @@ export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () =>
               <div className="text-sm whitespace-pre-wrap">{form.notes}</div>
             </div>
           )}
+          {/* Terms & Conditions */}
           <div className="p-3 text-[10px] bg-black/5 border-t border-black whitespace-pre-wrap">
-            {/* Terms & Conditions will be appended when printing/exporting */}
-            <em>Terms & Conditions will be appended in the exported document or printed PDF.</em>
+            <pre className="whitespace-pre-wrap text-[10px]">{INSTALLER_PO_TERMS}</pre>
           </div>
         </div>
       )}
@@ -751,7 +751,7 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
       </div>
       {!previewMode && (
         <div className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2 p-4 bg-black/5 rounded-xl">
             <div>
               <label className="text-xs uppercase tracking-widest text-black/60">CO #</label>
               <input value={form.id} onChange={(e) => updateField("id", e.target.value)} className="w-full border-b border-black bg-transparent px-1 py-1 text-sm outline-none" />
@@ -781,7 +781,7 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
               <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} rows={3} className="w-full rounded-xl border border-black/40 p-2 text-sm"></textarea>
             </div>
           </div>
-          <div>
+          <div className="p-4 bg-black/5 rounded-xl">
             <table className="w-full table-fixed border-collapse">
               <thead>
                 <tr className="bg-black text-white text-xs uppercase">
@@ -808,7 +808,7 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
               </tbody>
             </table>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2 p-4 bg-black/5 rounded-xl">
             <div>
               <label className="text-xs uppercase tracking-widest text-black/60">Original Contract Sum</label>
               <input type="number" value={form.originalContractSum} onChange={(e) => updateField("originalContractSum", e.target.value)} className="w-full border-b border-black bg-transparent px-1 py-1 text-sm outline-none" />
@@ -830,7 +830,7 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
               <input type="number" value={form.newContractSum} onChange={(e) => updateField("newContractSum", e.target.value)} className="w-full border-b border-black bg-transparent px-1 py-1 text-sm outline-none" />
             </div>
           </div>
-          <div>
+          <div className="p-4 bg-black/5 rounded-xl">
             <label className="text-xs uppercase tracking-widest text-black/60">Notes</label>
             <textarea value={form.notes} onChange={(e) => updateField("notes", e.target.value)} rows={3} className="w-full rounded-xl border border-black/40 p-2 text-sm"></textarea>
           </div>
@@ -917,8 +917,9 @@ export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () =>
               <div className="text-sm whitespace-pre-wrap">{form.notes}</div>
             </div>
           )}
+          {/* Terms & Conditions */}
           <div className="p-3 text-[10px] bg-black/5 border-t border-black whitespace-pre-wrap">
-            <em>Terms & Conditions will be appended in the exported document or printed PDF.</em>
+            <pre className="whitespace-pre-wrap text-[10px]">{CHANGE_ORDER_TERMS}</pre>
           </div>
         </div>
       )}

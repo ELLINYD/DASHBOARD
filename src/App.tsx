@@ -711,22 +711,16 @@ export default function App() {
         <table className="w-full min-w-[820px] table-fixed border-collapse">
           <thead>
             <tr className="bg-black text-white">
-              {[
-                "PO Number",
-                "Date",
-                "Vendor",
-                "Project",
-                "Division",
-                "Amount",
-                "Paid",
-                "Balance",
-                "Status",
-                "Details",
-              ].map((h) => (
-                <th key={h} className="px-3 py-2 text-left text-xs uppercase tracking-widest">
-                  {h}
-                </th>
-              ))}
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">PO Number</th>
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">Date</th>
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">Vendor</th>
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">Project</th>
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">Division</th>
+              <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Amount</th>
+              <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Paid</th>
+              <th className="w-24 px-2 py-1 text-right text-xs uppercase tracking-widest">Balance</th>
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">Status</th>
+              <th className="px-3 py-2 text-left text-xs uppercase tracking-widest">Details</th>
             </tr>
           </thead>
           <tbody>
@@ -739,9 +733,9 @@ export default function App() {
                 <td className="px-3 py-2">
                   <Pill text={po.division} />
                 </td>
-                <td className="px-3 py-2 text-right">{fmt.format(po.amount)}</td>
-                <td className="px-3 py-2 text-right">{fmt.format(po.paid)}</td>
-                <td className="px-3 py-2 text-right font-semibold">{fmt.format(po.balance)}</td>
+                <td className="w-24 text-right">{fmt.format(po.amount)}</td>
+                <td className="w-24 text-right">{fmt.format(po.paid)}</td>
+                <td className="w-24 text-right font-semibold">{fmt.format(po.balance)}</td>
                 <td className="px-3 py-2">
                   <Pill text={po.status} />
                 </td>
@@ -905,17 +899,29 @@ export default function App() {
                 </div>
               </BorderCard>
               <BorderCard className="p-4 text-sm">
-                <div className="font-semibold">Payment History</div>
-                <div className="mt-2 space-y-1">
-                  {detailPO.payments.map((p, idx) => (
-                    <div key={idx} className="flex justify-between">
-                      <span className="text-black/60">
-                        {p.date}: {p.description}
-                      </span>
-                      <span className="font-semibold">{fmt.format(p.amount)}</span>
-                    </div>
-                  ))}
-                </div>
+                <div className="font-semibold mb-2">Payment History</div>
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-black/20">
+                      <th className="text-left py-1 text-black/60 font-normal">Date</th>
+                      <th className="text-left py-1 text-black/60 font-normal">Description</th>
+                      <th className="text-right py-1 text-black/60 font-normal">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {detailPO.payments.map((p, idx) => (
+                      <tr key={idx} className="border-b border-black/10">
+                        <td className="py-1">{p.date}</td>
+                        <td className="py-1">{p.description}</td>
+                        <td className="text-right py-1">{fmt.format(p.amount)}</td>
+                      </tr>
+                    ))}
+                    <tr className="border-t border-black/20 font-semibold">
+                      <td colSpan={2} className="py-1">Total Paid</td>
+                      <td className="text-right py-1">{fmt.format(detailPO.paid)}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </BorderCard>
             </div>
 
