@@ -137,6 +137,55 @@ const purchaseOrders = [
   { id: "23799", date: "4/8/24", vendor: "Elite Painting Services", project: "28600-24", division: "Venture", amount: 87500, paid: 35000, balance: 52500, status: "Open", vendorAddress: "File", vendorPhone: "File", deliverTo: "Site", items: [{ qty: 1, description: "Details", unitPrice: 87500, total: 87500 }], payments: [{ date: "Var", description: "History", amount: 35000, balance: 52500 }] },
 ];
 
+// Sample Change Orders dataset parsed from AP - CO LOG.xlsx (first few entries)
+const changeOrders = [
+  {
+    id: "25189-01",
+    status: "",
+    project: "30300",
+    date: "2025-04-11",
+    amount: 1050,
+    paid: 1050,
+    balance: 0,
+    vendor: "M-CAD Group (CAD-Cabinets)",
+    division: "",
+  },
+  {
+    id: "25190-01",
+    status: "",
+    project: "30300",
+    date: "2025-04-11",
+    amount: 650,
+    paid: 650,
+    balance: 0,
+    vendor: "M-CAD Group (CAD-Cabinets)",
+    division: "",
+  },
+  {
+    id: "25237-01",
+    status: "CLOSED",
+    project: "30300",
+    date: "2025-06-19",
+    amount: 1500,
+    paid: 1500,
+    balance: 0,
+    vendor: "M-CAD Group (CAD-Cabinets)",
+    division: "",
+  },
+];
+
+// Aggregate all payment entries across purchase orders
+const allPayments = purchaseOrders.flatMap((po) =>
+  po.payments.map((p) => ({
+    poId: po.id,
+    date: p.date,
+    description: p.description,
+    amount: p.amount,
+    vendor: po.vendor,
+    project: po.project,
+  }))
+);
+
 const vendors = [
   { id: "V-001", name: "NODE Architecture Engineering Consulting P.C.", category: "Professional Services", contact: "John Smith", phone: "(212) 555-0100", outstanding: 39999.9, email: "contact@nodearch.com" },
   { id: "V-002", name: "Ratigan - Schottler Manufacturing", category: "Fabrication", contact: "Jane Doe", phone: "(718) 555-0200", outstanding: 274596.72, email: "info@rsmanufacturing.com" },
@@ -381,6 +430,11 @@ const NAV = [
       { id: "view-cos", label: "View COs", icon: Eye },
       { id: "create-co", label: "Create CO", icon: Plus },
     ],
+  },
+  {
+    id: "view-payments",
+    label: "Payments",
+    icon: BadgeDollarSign,
   },
   { id: "monthly-bills", label: "Monthly Bills", icon: Calendar },
   { id: "vendors", label: "Vendors", icon: Users },
@@ -938,6 +992,85 @@ export default function App() {
       )}
     </BorderCard>
   );
+
+  // View to display a list of Change Orders
+  const ChangeOrdersView: React.FC = () => {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold mb-4">Change Orders</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-fixed border-collapse">
+            <thead>
+              <tr className="text-xs uppercase bg-black text-white">
+                <th className="p-2 w-24">CO #</th>
+                <th className="p-2 w-24">Date</th>
+                <th className="p-2">Vendor</th>
+                <th className="p-16">Project</th>
+                <th className="p-2 w-24 text-right">Amount</th>
+                <th className="p-2 w-24 text-right">Paid</th>
+                <th className="p-2 w-24 text-right">Balance</th>
+                <th className="p-2 w-16">Status</th>
+                <th className="p-2 w-16">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {changeOrders.map((co) => (
+                <tr key={co.id} className="border-b border-black/20 text-sm">
+                  <td className="p-2">{co.id}</td>
+                  <td className="p-2">{co.date}</td>
+                  <td className="p-2">{co.vendor}</td>
+                  <td className="p-2">{co.project}</td>
+                  <td className="p-2 text-right">${co.amount.toLocaleString()}</td>
+                  <td className="p-2 text-right">${co.paid.toLocaleString()}</td>
+                  <td className="p-2 text-right">${co.balance.toLocaleString()}</td>
+                  <td className="p-2 text-center">{co.status || "Open"}</td>
+                  <td className="p-2 text-center">
+                    {/* Placeholder for details button; implement modal if desired */}
+                    <button className="underline">View</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
+  // View to display all payments across purchase orders
+  const PaymentsView: React.FC = () => {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold mb-4">Payments</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-fixed border-collapse">
+            <thead>
+              <tr className="text-xs uppercase bg-black text-white">
+                <th className="p-2 w-24">PO #</th>
+                <th className="p-2 w-24">Date</th>
+                <th className="p-2">Description</th>
+                <th className="p-2 w-24 text-right">Amount</th>
+                <th className="p-2">Vendor</th>
+                <th className="p-2">Project</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allPayments.map((p, idx) => (
+                <tr key={idx} className="border-b border-black/20 text-sm">
+                  <td className="p-2">{p.poId}</td>
+                  <td className="p-2">{p.date}</td>
+                  <td className="p-2">{p.description}</td>
+                  <td className="p-2 text-right">${p.amount.toLocaleString()}</td>
+                  <td className="p-2">{p.vendor}</td>
+                  <td className="p-2">{p.project}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
 
   // ===== Upload Drawer (Paste or File) =====
   function UploadDrawer({ open, onClose, onImport, title }: { open: boolean; onClose: () => void; onImport: (rows: any[]) => void; title: string; }) {
@@ -1579,6 +1712,8 @@ export default function App() {
           {active === "create-co" && (
             <ChangeOrderCreateView projects={projects} vendors={vendors} purchaseOrders={purchaseOrders} />
           )}
+          {active === "view-cos" && <ChangeOrdersView />}
+          {active === "view-payments" && <PaymentsView />}
         </main>
       </section>
 
