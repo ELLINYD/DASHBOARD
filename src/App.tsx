@@ -27,6 +27,14 @@ import {
   Lien,
   ClosedProject,
 } from "./receivables_views";
+import {
+  AutopayBillsView,
+  SubBillsView,
+  MaterialsBillsView,
+  AutopayBill,
+  SubBill,
+  MaterialBill,
+} from "./monthly_bills_views";
 
 /**
  * ELLI V1 — Monochrome Edition (AP/AR)
@@ -276,6 +284,22 @@ const closedProjects: ClosedProject[] = [
     finalAmount: 987500,
     completionDate: "2025-08-15",
   },
+];
+
+// Sample Monthly Bills data
+const autopayBills: AutopayBill[] = [
+  { id: "auto1", vendor: "Utility Co.", description: "Electricity for shop", monthlyAmount: 1500, nextPaymentDate: "2025-11-01" },
+  { id: "auto2", vendor: "Insurance Co.", description: "General Liability Insurance", monthlyAmount: 1200, nextPaymentDate: "2025-10-28" },
+];
+
+const subBills: SubBill[] = [
+  { id: "sub1", vendor: "Subcontractor A", poNumber: "PO-1001", description: "Framing labor September", totalAmount: 50000, dueDate: "2025-10-15", percentDueThisMonth: 0.2, paidPercent: 0.6 },
+  { id: "sub2", vendor: "Subcontractor B", poNumber: "PO-1005", description: "Electrical rough-in October", totalAmount: 30000, dueDate: "2025-11-05", percentDueThisMonth: 0.2, paidPercent: 0.0 },
+];
+
+const materialBills: MaterialBill[] = [
+  { id: "mat1", vendor: "Supplier X", poNumber: "PO-2001", description: "Steel studs", totalAmount: 20000, dueDate: "2025-10-20", percentDueThisMonth: 0.2, paidPercent: 0.5 },
+  { id: "mat2", vendor: "Supplier Y", poNumber: "PO-2003", description: "Sheetrock panels", totalAmount: 15000, dueDate: "2025-11-10", percentDueThisMonth: 0.2, paidPercent: 0.0 },
 ];
 
 const vendors = [
@@ -539,7 +563,16 @@ const NAV = [
       { id: "receivables-closed", label: "Closed Projects", icon: Calendar },
     ],
   },
-  { id: "monthly-bills", label: "Monthly Bills", icon: Calendar },
+  {
+    id: "monthly-bills",
+    label: "Monthly Bills",
+    icon: Calendar,
+    children: [
+      { id: "bills-autopay", label: "Autopay", icon: BadgeDollarSign },
+      { id: "bills-sub", label: "Subcontractors", icon: Users },
+      { id: "bills-materials", label: "Materials", icon: ShoppingCart },
+    ],
+  },
   { id: "vendors", label: "Vendors", icon: Users },
 ] as const;
 
@@ -654,6 +687,7 @@ export default function App() {
     pos: true,
     cos: false,
     receivables: false,
+    "monthly-bills": false,
   });
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<keyof (typeof purchaseOrders)[number] | "">("");
@@ -1880,6 +1914,9 @@ export default function App() {
           {active === "receivables-log" && <ReceivablesLogView receivables={receivables} />}
           {active === "receivables-liens" && <LiensView liens={liens} />}
           {active === "receivables-closed" && <ClosedProjectsView projects={closedProjects} />}
+          {active === "bills-autopay" && <AutopayBillsView bills={autopayBills} />}
+          {active === "bills-sub" && <SubBillsView bills={subBills} />}
+          {active === "bills-materials" && <MaterialsBillsView bills={materialBills} />}
         </main>
       </section>
 
