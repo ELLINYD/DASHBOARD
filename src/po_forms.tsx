@@ -150,7 +150,12 @@ function generatePoXls(po: any): string {
  * Mirrors the RFQ form structure: edit/preview toggle, line items, export to
  * Word/Excel, and print as PDF.  Does not include Terms & Conditions.
  */
-export const FabricatorPOCreateView: React.FC = () => {
+interface FabricatorPOCreateViewProps {
+  projects: any[];
+  vendors: any[];
+}
+
+export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = (props) => {
   const [form, setForm] = useState<any>({
     id: "PO-FAB-" + Math.floor(10000 + Math.random() * 89999),
     date: new Date().toISOString().slice(0, 10),
@@ -404,7 +409,12 @@ export const FabricatorPOCreateView: React.FC = () => {
  * Extends the Fabricator form with a Scope of Work field and
  * appends the Terms & Conditions page when printing or exporting.
  */
-export const InstallerPOCreateView: React.FC = () => {
+interface InstallerPOCreateViewProps {
+  projects: any[];
+  vendors: any[];
+}
+
+export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = (props) => {
   // Reuse the Fabricator form state and logic but add scopeOfWork
   const [form, setForm] = useState<any>({
     id: "PO-INST-" + Math.floor(10000 + Math.random() * 89999),
@@ -642,7 +652,13 @@ export const InstallerPOCreateView: React.FC = () => {
  * Provides fields to reference an existing PO and capture additional work.
  * Includes contract sum breakdown and appends terms & conditions.
  */
-export const ChangeOrderCreateView: React.FC = () => {
+interface ChangeOrderCreateViewProps {
+  projects: any[];
+  vendors: any[];
+  purchaseOrders: any[];
+}
+
+export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = (props) => {
   const [form, setForm] = useState<any>({
     id: "CO-" + Math.floor(1000 + Math.random() * 8999),
     date: new Date().toISOString().slice(0, 10),
