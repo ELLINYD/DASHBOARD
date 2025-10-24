@@ -155,7 +155,7 @@ interface FabricatorPOCreateViewProps {
   vendors: any[];
 }
 
-export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = (props) => {
+export const FabricatorPOCreateView: React.FC<FabricatorPOCreateViewProps> = () => {
   const [form, setForm] = useState<any>({
     id: "PO-FAB-" + Math.floor(10000 + Math.random() * 89999),
     date: new Date().toISOString().slice(0, 10),
@@ -414,7 +414,7 @@ interface InstallerPOCreateViewProps {
   vendors: any[];
 }
 
-export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = (props) => {
+export const InstallerPOCreateView: React.FC<InstallerPOCreateViewProps> = () => {
   // Reuse the Fabricator form state and logic but add scopeOfWork
   const [form, setForm] = useState<any>({
     id: "PO-INST-" + Math.floor(10000 + Math.random() * 89999),
@@ -658,7 +658,7 @@ interface ChangeOrderCreateViewProps {
   purchaseOrders: any[];
 }
 
-export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = (props) => {
+export const ChangeOrderCreateView: React.FC<ChangeOrderCreateViewProps> = () => {
   const [form, setForm] = useState<any>({
     id: "CO-" + Math.floor(1000 + Math.random() * 8999),
     date: new Date().toISOString().slice(0, 10),
