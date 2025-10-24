@@ -35,6 +35,7 @@ import {
   SubBill,
   MaterialBill,
 } from "./monthly_bills_views";
+import ProjectDetailView from "./project_detail_view";
 
 /**
  * ELLI V1 — Monochrome Edition (AP/AR)
@@ -301,6 +302,112 @@ const materialBills: MaterialBill[] = [
   { id: "mat1", vendor: "Supplier X", poNumber: "PO-2001", description: "Steel studs", totalAmount: 20000, dueDate: "2025-10-20", percentDueThisMonth: 0.2, paidPercent: 0.5 },
   { id: "mat2", vendor: "Supplier Y", poNumber: "PO-2003", description: "Sheetrock panels", totalAmount: 15000, dueDate: "2025-11-10", percentDueThisMonth: 0.2, paidPercent: 0.0 },
 ];
+
+// Sample Project Detail data
+const sampleProjectDetails = {
+  "28600-24": {
+    projectInfo: {
+      projectName: "John Jay Pool Renovation",
+      gcName: "Barr & Barr",
+      ownerName: "NYC Parks",
+      contractNumber: "PARKS-28600-24",
+      projectManager: "KL/TT",
+    },
+    contractSummary: {
+      initialContractValue: 1420000,
+      approvedCOs: 35000,
+      paymentToDate: 890000,
+      paymentTerms: "Net 90",
+      currentRetainagePercent: 10,
+    },
+    requisitions: [
+      { reqNumber: "#001", reqMonthYear: "Sep 2025", type: "Payment" as const, date: "2025-09-15", checkNumber: "CHK-1001", amount: 250000, balance: 1170000 },
+      { reqNumber: "#002", reqMonthYear: "Oct 2025", type: "Payment" as const, date: "2025-10-15", checkNumber: "CHK-1015", amount: 320000, balance: 850000 },
+      { reqNumber: "#003", reqMonthYear: "Oct 2025", type: "Payment" as const, date: "2025-10-28", checkNumber: "CHK-1032", amount: 320000, balance: 530000 },
+    ],
+    changeOrders: [
+      {
+        elliCONumber: "CO-001",
+        vendorTicket: "VT-789",
+        elliAmount: 15000,
+        dateSubmitted: "2025-09-10",
+        regarding: "Additional waterproofing for pool deck as per architect request",
+        approvedAmount: 15000,
+        dateApproved: "2025-09-20",
+        gcCONumber: "GC-CO-045",
+        addedToReq: "#002",
+        billedToGCReq: "GC-REQ-012",
+        paidDate: "2025-10-15",
+        notes: "Approved with no changes",
+      },
+      {
+        elliCONumber: "CO-002",
+        vendorTicket: "VT-801",
+        elliAmount: 20000,
+        dateSubmitted: "2025-10-05",
+        regarding: "Upgrade pool filtration system to high-efficiency model",
+        approvedAmount: 20000,
+        dateApproved: "2025-10-12",
+        gcCONumber: "GC-CO-046",
+        addedToReq: "#003",
+        billedToGCReq: "GC-REQ-013",
+        paidDate: "",
+        notes: "Pending final inspection",
+      },
+    ],
+  },
+  "81084": {
+    projectInfo: {
+      projectName: "250 Ashland NYCHA",
+      gcName: "STV",
+      ownerName: "NYCHA",
+      contractNumber: "NYCHA-81084",
+      projectManager: "ZM/PL",
+    },
+    contractSummary: {
+      initialContractValue: 2100000,
+      approvedCOs: 50000,
+      paymentToDate: 1200000,
+      paymentTerms: "Net 90",
+      currentRetainagePercent: 10,
+    },
+    requisitions: [
+      { reqNumber: "#001", reqMonthYear: "Aug 2025", type: "Payment" as const, date: "2025-08-20", checkNumber: "CHK-2001", amount: 450000, balance: 1700000 },
+      { reqNumber: "#002", reqMonthYear: "Sep 2025", type: "Payment" as const, date: "2025-09-18", checkNumber: "CHK-2015", amount: 400000, balance: 1300000 },
+      { reqNumber: "#003", reqMonthYear: "Oct 2025", type: "Payment" as const, date: "2025-10-20", checkNumber: "CHK-2028", amount: 350000, balance: 950000 },
+    ],
+    changeOrders: [
+      {
+        elliCONumber: "CO-003",
+        vendorTicket: "VT-445",
+        elliAmount: 30000,
+        dateSubmitted: "2025-08-15",
+        regarding: "Structural reinforcement for building facade",
+        approvedAmount: 30000,
+        dateApproved: "2025-08-25",
+        gcCONumber: "GC-CO-012",
+        addedToReq: "#002",
+        billedToGCReq: "GC-REQ-008",
+        paidDate: "2025-09-18",
+        notes: "Approved by NYCHA",
+      },
+      {
+        elliCONumber: "CO-004",
+        vendorTicket: "VT-502",
+        elliAmount: 20000,
+        dateSubmitted: "2025-09-10",
+        regarding: "Additional HVAC ductwork for 3rd floor units",
+        approvedAmount: 20000,
+        dateApproved: "2025-09-22",
+        gcCONumber: "GC-CO-015",
+        addedToReq: "#003",
+        billedToGCReq: "GC-REQ-010",
+        paidDate: "",
+        notes: "Installation in progress",
+      },
+    ],
+  },
+};
 
 const vendors = [
   { id: "V-001", name: "NODE Architecture Engineering Consulting P.C.", category: "Professional Services", contact: "John Smith", phone: "(212) 555-0100", outstanding: 39999.9, email: "contact@nodearch.com" },
@@ -698,6 +805,9 @@ export default function App() {
   // RFQ state
   const [rfqs, setRfqs] = useState(seedRFQs);
   const [viewRFQ, setViewRFQ] = useState<any>(null);
+
+  // Project Detail state
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   // Derived data (POs)
   const filteredPOs = useMemo(() => {
@@ -1911,7 +2021,24 @@ export default function App() {
           {active === "view-cos" && <ChangeOrdersView />}
           {active === "view-payments" && <PaymentsView />}
           {active === "receivables-summary" && <ReceivablesSummaryView receivables={receivables} />}
-          {active === "receivables-log" && <ReceivablesLogView receivables={receivables} />}
+          {active === "receivables-log" && !selectedProjectId && (
+            <ReceivablesLogView
+              receivables={receivables}
+              onViewProject={(projectId) => {
+                setSelectedProjectId(projectId);
+                setActive("project-detail");
+              }}
+            />
+          )}
+          {active === "project-detail" && selectedProjectId && sampleProjectDetails[selectedProjectId as keyof typeof sampleProjectDetails] && (
+            <ProjectDetailView
+              project={sampleProjectDetails[selectedProjectId as keyof typeof sampleProjectDetails]}
+              onBack={() => {
+                setSelectedProjectId(null);
+                setActive("receivables-log");
+              }}
+            />
+          )}
           {active === "receivables-liens" && <LiensView liens={liens} />}
           {active === "receivables-closed" && <ClosedProjectsView projects={closedProjects} />}
           {active === "bills-autopay" && <AutopayBillsView bills={autopayBills} />}

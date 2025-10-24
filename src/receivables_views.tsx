@@ -1,4 +1,5 @@
 import React from "react";
+import { Eye } from "lucide-react";
 
 // A simple card with border and header
 const Card: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -56,8 +57,12 @@ export const ReceivablesSummaryView: React.FC<{ receivables: Receivable[] }> = (
   );
 };
 
-export const ReceivablesLogView: React.FC<{ receivables: Receivable[] }> = ({
+export const ReceivablesLogView: React.FC<{
+  receivables: Receivable[];
+  onViewProject?: (projectId: string) => void;
+}> = ({
   receivables,
+  onViewProject,
 }) => (
   <Card title="Requisitions Log">
     <table className="w-full table-fixed text-sm border-collapse">
@@ -71,6 +76,7 @@ export const ReceivablesLogView: React.FC<{ receivables: Receivable[] }> = ({
           <th className="w-32 px-2 py-1">Submitted</th>
           <th className="w-32 px-2 py-1">Approved</th>
           <th className="w-32 px-2 py-1">Paid</th>
+          <th className="w-20 px-2 py-1">Details</th>
         </tr>
       </thead>
       <tbody>
@@ -92,6 +98,17 @@ export const ReceivablesLogView: React.FC<{ receivables: Receivable[] }> = ({
             <td className="px-2 py-1">{r.submitted}</td>
             <td className="px-2 py-1">{r.approved || "-"}</td>
             <td className="px-2 py-1">{r.paid || "-"}</td>
+            <td className="px-2 py-1">
+              {onViewProject && (
+                <button
+                  onClick={() => onViewProject(r.project)}
+                  className="rounded-full border border-black px-2 py-1 text-xs hover:bg-black/5"
+                >
+                  <Eye className="inline h-3 w-3 mr-1" />
+                  View
+                </button>
+              )}
+            </td>
           </tr>
         ))}
       </tbody>
