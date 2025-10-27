@@ -2161,6 +2161,11 @@ export default function App() {
 
       {/* RFQ Modal */}
       <RFQModal rfq={viewRFQ} onClose={() => setViewRFQ(null)} />
+
+      {/* Build Tag Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 border-t bg-white px-4 py-2 text-center text-xs text-black/50">
+        Build: {import.meta.env.VITE_BUILD_TAG || 'dev'}
+      </footer>
     </div>
   );
 }
